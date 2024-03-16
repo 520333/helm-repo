@@ -1,6 +1,6 @@
 apiVersion: v2
-appVersion: 6.0.2
+appVersion: 6.0.3
 description: A Helm chart for wordpress
 name: wordpress
 type: application
-version: 2.0.0
+version: 2.0.1

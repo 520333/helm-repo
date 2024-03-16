@@ -11,7 +11,7 @@ replicas: 4
 # POD镜像
 image:
   name: wordpress
-  tags: 6.0.2
+  tags: 6.0.3
 imagePullPolicy: ""
 
 # POD 环境变量
