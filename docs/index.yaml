@@ -1,0 +1,25 @@
+apiVersion: v1
+entries:
+  app:
+  - apiVersion: v2
+    appVersion: v1.0
+    created: "2024-03-17T04:01:13.317654018+08:00"
+    description: A Helm chart for web
+    digest: da204a5274dbf72a1c93436c8c78d5d8435f6357ae9e7cc958f2cdb98377c085
+    name: app
+    type: application
+    urls:
+    - app-1.0.0.tgz
+    version: 1.0.0
+  wordpress:
+  - apiVersion: v2
+    appVersion: 6.0.2
+    created: "2024-03-17T04:01:13.318862861+08:00"
+    description: A Helm chart for wordpress
+    digest: 4ae6b7a1dfdd9a84cb5bcba64a9bd355caaa938854164c0e0ab665c3b66eb1a0
+    name: wordpress
+    type: application
+    urls:
+    - wordpress-2.0.0.tgz
+    version: 2.0.0
+generated: "2024-03-17T04:01:13.312657176+08:00"

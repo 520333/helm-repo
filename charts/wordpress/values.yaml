@@ -1,0 +1,121 @@
+# 名称
+nameOverride: ""
+fullnameOverride: ""
+
+# 名称空间
+namepsace: ""
+
+# POD副本数
+replicas: 4
+
+# POD镜像
+image:
+  name: wordpress
+  tags: 6.0.2
+imagePullPolicy: ""
+
+# POD 环境变量
+env:
+- name: WORDPRESS_DB_HOST
+  value: "blog-mysql.default.svc.cluster.local"
+- name: WORDPRESS_DB_USER
+  value: "root"
+- name: WORDPRESS_DB_PASSWORD
+  value: "6N1z8HmXJR"
+
+# POD资源限制
+resources:
+resources:
+  limits:
+    memory: 200Mi
+  requests:
+    memory: 200Mi
+
+# POD节点选择器
+nodeSelector: {}
+  # disktype: ssd
+
+# POD亲和
+affinity: {}
+  # podAffinity:
+  #   preferredDuringSchedulingIgnoredDuringExecution:
+  #   - labelSelector:
+  #       matchExpressions:
+  #       - key: app
+  #         operator: In
+  #         values: ["web"]
+  #     topologyKey: kubernets.io/hostname
+
+# POD容忍度
+tolerations: {}
+  # - key: "node-role.kubernetes.io/control-plane"
+  #   operator: "Exists"
+  #   effect: "NoSchedule"
+  # - key: "node-role.kubernetes.io/master"
+  #   operator: "Exists"
+  #   effect: "NoSchedule"
+
+# 容器探针
+startupProbe: {}
+  # httpGet:
+  #   path: /
+  #   port: 80
+  # initialDelaySeconds: 200
+  # periodSeconds: 10
+  # timeoutSeconds: 10
+  # failureThreshold: 3
+  # successThreshold: 1
+
+readinessProbe: {}
+  # httpGet:
+  #   path: /
+  #   port: 80
+  # initialDelaySeconds: 200
+  # periodSeconds: 10
+  # timeoutSeconds: 10
+  # failureThreshold: 3
+
+livenessProbe: {}
+  # httpGet:
+  #   path: /
+  #   port: 80
+  # initialDelaySeconds: 200
+  # periodSeconds: 10
+  # timeoutSeconds: 10
+  # failureThreshold: 3
+
+# PVC
+persistence:
+  # 是否开启pvc
+  enabled: true
+  # 系统中已经存在的pvc名称
+  claimName: ""
+  # 动态storage名称
+  storageClassName: "nfs-provisioner-storage"
+  # pvc访问模式
+  accessModes: "ReadWriteMany"
+  # 申请pvc的大小
+  storage: "10Gi"
+
+# Service网络
+service:
+  type: ""
+  name: http
+  port: 80
+  containerPort: 80
+  nodeport: "32000"
+
+# tls 证书
+tls:
+  enabled: true
+  cretpath: "ssl/server.crt"
+  keypath: "ssl/server.key"
+
+# ingress
+ingress:
+  enabled: true
+  ClassName: "nginx"
+  host: "helm.rushbi.me"
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"

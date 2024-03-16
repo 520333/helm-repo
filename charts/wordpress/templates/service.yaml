@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "wordpress.fullname" . }}-svc
+  namespace: {{ .Values.namespace | default "default" }}
+  labels:
+    {{- include "wordpress.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type | default "ClusterIP" }}
+  selector:
+    {{- include "wordpress.selectorLabels" . | nindent 4 }}
+  ports:
+  - name: {{ .Values.service.name }}
+    port: {{ .Values.service.port }}
+    targetPort: {{ .Values.service.containerPort }}
+    # 如果service.type为NodePort，并且.Values.service.nodePort有定义值，则将Service的NodePort端口设定为自行定义的端口，否则nodeport使用随机端口
+    {{- if and (eq .Values.service.type "NodePort") .Values.service.nodeport }}
+    nodePort: {{ .Values.service.nodeport }}
+    {{- end }}

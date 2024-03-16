@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+data:
+  {{- range $path, $content := .Files.Glob "config/*.conf" }}
+  # 默认是获取文件名称的绝对路径，base是仅获取文件名称作为key名称。
+  {{ base $path }}: |-
+  {{- $content | toString | nindent 4 }} # 文件内容，但默认获取的是字节内容因此使用toString转为字符串，而后使用nindent向右移动4个空格。
+  {{- end }}

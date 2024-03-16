@@ -1,0 +1,67 @@
+version: test
+replicas: 
+image:
+  name: rushbi/demoapp
+  tags: v1.0
+imagepullpolicy: ""
+
+resources:
+  limits:
+    memory: 100Mi
+  requests:
+    memory: 100Mi
+readinessprobe:
+  httpGet:
+    host: 192.168.50.201
+    path: /
+    scheme: HTTPS
+  initialDelaySeconds: 2
+  failureThreshold: 3
+  timeoutSeconds: 15
+
+configmap:
+  username: rushbi
+  password: hello
+
+# nameOverride: "hello_app_dawn"
+env:
+- name: username
+  value: "rushbi"
+- name: password
+  value: "123456"
+
+
+
+AppConfig:
+  nginx.conf: |-
+    server {
+      listen 80;
+      server_name app.rushbi.me;
+      location / {
+        index index.html;
+      }
+    }
+  nginx-status.conf: |-
+    server {
+      listen 8899;
+      stub_status;
+    }
+SecurityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+
+
+
+service:
+  port: 80
+  containerport: 80
+
+ingress:
+  enabled: true
+  ClassName: "nginx"
+  host: app-tls.rushbi.me
+
+tls:
+  enabled: true
+  CertPath: "ssl/server.crt"
+  KeyPath: "ssl/server.key"

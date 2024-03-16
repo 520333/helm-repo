@@ -1,0 +1,6 @@
+恭喜你成功安装：{{ .Chart.Name }}
+你安装的Release名称是： {{ .Release.Name }}
+需要了解更多信息请执行如下操作：
+# helm ls
+# helm status {{ .Release.Name }}
+# helm get {{ .Release.Name }}

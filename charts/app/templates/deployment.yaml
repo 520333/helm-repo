@@ -1,0 +1,29 @@
+{{- if .Capabilities.APIVersions.Has "apps/v1" -}}
+apiVersion: apps/v1
+{{ else }}
+apiVersion: extensions/v1bate1
+{{- end -}}
+kind: Deployment
+metadata:
+  name: {{ include "app.fullname" . }}
+  labels:
+    {{- include "mychart.labels" . |nindent 4 }} # include是调用命名模板的语句 . 是传递给模板的上下文 nindent 4 表示向右缩进4个空格。
+spec:
+  replicas: {{ .Values.replicas | default 1 }}
+  selector:
+    matchLabels:
+    {{- include "app.web.labels" . |nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "app.web.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: demoapp
+          image: {{ .Values.image.name | required "imageName is required!" }}:{{ .Values.image.tags }}
+          imagePullPolicy: {{ .Values.imagepullpolicy | default "IfNotPresent" }}
+          ports:
+            - containerPort: {{ .Values.service.containerport }}
+          resources:
+          {{- toYaml .Values.resources |nindent 12 }}
+          

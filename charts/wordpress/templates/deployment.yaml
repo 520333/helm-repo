@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "wordpress.fullname" . }}-deploy
+  namespace: {{ .Values.namespace | default "default" }}
+  labels:
+    {{- include "wordpress.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicas | default "1" }}
+  selector:
+    matchLabels:
+      {{- include "wordpress.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "wordpress.labels" . | nindent 8 }}
+    spec:
+      volumes:
+      - name: wordpress-data
+        {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.claimName | default ( include "wordpress.fullname" . ) }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+      {{- if .Values.nodeSelector }}
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.affinity }}
+      affinity:
+        {{- toYaml .Values.affinity | nindent 8 }}
+      {{- end }}
+      {{- if .Values.tolerations }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ .Release.Name }}
+        image: {{ .Values.image.name | required "image not found!" }}:{{ .Values.image.tags }}
+        imagePullPolicy: {{ .Values.imagePullPolicy | default "IfNotPresent" }}
+        {{- if .Values.startupProbe }}
+        startupProbe:
+          {{- toYaml .Values.startupProbe | nindent 10 }}
+        {{- end }}
+        {{- if .Values.readinessProbe }}
+        readinessProbe:
+          {{- toYaml .Values.readinessProbe | nindent 10 }}
+        {{- end }}
+        {{- if .Values.livenessProbe }}
+        livenessProbe:
+          {{- toYaml .Values.livenessProbe | nindent 10 }}
+        {{- end }}
+        ports:
+        - containerPort: {{ .Values.service.containerPort }}
+        resources:
+          {{- toYaml .Values.resources |nindent 10 }}
+        env:
+        {{- toYaml .Values.env |nindent 10 }}
+        volumeMounts:
+        - name: wordpress-data
+          mountPath: /var/www/html/wp-content/uploads
